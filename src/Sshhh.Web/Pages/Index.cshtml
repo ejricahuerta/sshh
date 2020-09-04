@@ -1,0 +1,60 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+    <section class="text-center h-100">
+        <header class="m-2">
+            <h3 class="font-weight-bold">Among Us Channel Sshhh</h3>
+            <p>Enter you discord server, current channel, and afk channel</p>
+        </header>
+        <form method="post" asp-page="Index">
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <a href="https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-">
+                        <small>
+                            how to find server id
+                        </small>
+                    </a>
+                    <input type="text" class="form-control" placeholder="Server Id" asp-for="@Model.Input.ServerId">
+                </div>
+                <div class="form-group col-md-6">
+                    <input type="text" class="form-control" placeholder="From Channel" asp-for="@Model.Input.From">
+                </div>
+                <div class="form-group col-md-6">
+                    <input type="text" class="form-control" placeholder="To Channel" asp-for="@Model.Input.To">
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" asp-page-handler="Move" class="btn btn-lg btn-danger w-100 mb-2">
+                    Move
+                </button>
+                <button type="submit" class="btn btn-danger mb-2  w-100 " asp-page-handler="MoveSwap">
+                    <i class="fas fa-exchange-alt"></i>
+                </button>
+                <input type="hidden" name="mute_hidden" value="true" />
+                <button type="submit" asp-page-handler="ToggleMute" class="btn-toggle-mute btn btn-lg btn-danger w-100 mb-2">Toggle Mute</button>
+            </div>
+        </form>
+    </section>
+</div>
+
+@section Scripts {
+
+    <script>
+        $(function () {
+            $(".btn-toggle-mute").on("click", function (e) {
+                e.preventDefault();
+                if ($("#mute_hidden").val() === 'false') {
+
+                }
+                else {
+
+                }
+            });
+        });
+
+    </script>
+}
