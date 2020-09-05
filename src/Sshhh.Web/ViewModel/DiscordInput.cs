@@ -13,5 +13,6 @@ namespace Sshhh.Web.ViewModel
         [Required]
         public string From { get; set; }
         public string To { get; set; }
+        public bool Mute { get; set; }
     }
 }
