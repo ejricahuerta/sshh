@@ -36,14 +36,28 @@ namespace Sshhh.Web.Pages
             }
         }
 
-        public async Task OnPostMuteAllAsync()
+        public async Task OnPostMuteUsersAsync()
         {
             if (ModelState.IsValid)
             {
                 try
                 {
+                    await discordService.ToggleMuteForAllUsersAsync(Input.ServerId, Input.From, true);
+                }
+                catch (Exception e)
+                {
+                    this._logger.LogInformation(e, "Unable to Process");
+                }
+            }
+        }
 
-                    await discordService.ToggleMuteForAllUsersAsync(Input.ServerId, Input.From);
+        public async Task OnPostUnMuteUsersAsync()
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await discordService.ToggleMuteForAllUsersAsync(Input.ServerId, Input.From, false);
                 }
                 catch (Exception e)
                 {
