@@ -15,6 +15,8 @@ namespace Sshhh.Web.Discord
 
         private string discordToken;
 
+        private ulong logChannel = 751614757500354581;
+
         public DiscordService(IOptions<DiscordConfiguration> options)
         {
             client = new DiscordSocketClient();
@@ -37,7 +39,7 @@ namespace Sshhh.Web.Discord
             await client.StartAsync();
         }
 
-        public async Task ToggleMuteForAllUsersAsync(ulong serverId, string channelName, bool toggle = false)
+        public async Task ToggleMuteForAllUsersAsync(ulong serverId, string channelName, bool toggle = true)
         {
             SocketGuild guild = client.GetGuild(serverId);
             Console.WriteLine();
@@ -47,11 +49,30 @@ namespace Sshhh.Web.Discord
 
             var channel = guild.VoiceChannels.FirstOrDefault(p => p.Name.Equals(channelName));
 
-            foreach (var user in channel.Users)
+            if (channel.Users.Any())
             {
-                Console.WriteLine($"User name: {user.Id}");
-                await user.ModifyAsync(p => p.Mute = toggle);
+
+                var names = new List<string>();
+                foreach (var user in channel.Users)
+                {
+                    Console.WriteLine($"User name: {user.Id}");
+                    await user.ModifyAsync(p => p.Mute = toggle);
+                    names.Add(user.Username);
+                }
+                string message = $"I just {(toggle ? "muted" : "unmuted")} the following users on {channelName}:\n {string.Join(',', names)} ";
+                await LogToChannel(serverId, this.logChannel, message);
             }
+        }
+
+        private async Task LogToChannel(ulong serverId, ulong channelId, string message)
+        {
+            SocketGuild guild = client.GetGuild(serverId);
+            Console.WriteLine();
+            Console.WriteLine("Task: Log");
+            Console.WriteLine($"Guild Name: {guild.Name}");
+            Console.WriteLine($"Guild Channels: {guild.Channels.Count}");
+            var log = guild.GetTextChannel(channelId);
+            await log.SendMessageAsync(message);
         }
 
         public async Task MoveUsers(ulong serverId, string fromChannel, string toChannel)
@@ -63,9 +84,19 @@ namespace Sshhh.Web.Discord
             Console.WriteLine($"Guild Channels: {guild.Channels.Count}");
             var from = guild.VoiceChannels.FirstOrDefault(p => p.Name.Equals(fromChannel));
             var to = guild.VoiceChannels.FirstOrDefault(p => p.Name.Equals(toChannel));
-            foreach (var user in from.Users)
+
+            var names = new List<string>();
+
+            if (from.Users.Any())
             {
-                await user.ModifyAsync(x => x.Channel = to);
+
+                foreach (var user in from.Users)
+                {
+                    await user.ModifyAsync(x => x.Channel = to);
+                    names.Add(user.Username);
+                }
+                string message = $"I just moved the following users from {fromChannel} to {toChannel}:\n {string.Join(',', names)} ";
+                await LogToChannel(serverId, this.logChannel, message);
             }
         }
 
