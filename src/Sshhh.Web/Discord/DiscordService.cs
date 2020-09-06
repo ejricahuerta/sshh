@@ -34,9 +34,11 @@ namespace Sshhh.Web.Discord
                 discordToken = token;
             }
 
-            // Tokens should be considered secret data, and never hard-coded.
-            await client.LoginAsync(TokenType.Bot, discordToken);
-            await client.StartAsync();
+            if (client.ConnectionState.Equals(ConnectionState.Disconnected))
+            {
+                await client.LoginAsync(TokenType.Bot, discordToken);
+                await client.StartAsync();
+            }
         }
 
         public async Task ToggleMuteForAllUsersAsync(ulong serverId, string channelName, bool toggle = true)
@@ -45,7 +47,6 @@ namespace Sshhh.Web.Discord
             Console.WriteLine();
             Console.WriteLine("Task: Mute All");
             Console.WriteLine($"Guild Name: {guild.Name}");
-            Console.WriteLine($"Guild Channels: {guild.Channels.Count}");
 
             var channel = guild.VoiceChannels.FirstOrDefault(p => p.Name.Equals(channelName));
 
@@ -53,15 +54,39 @@ namespace Sshhh.Web.Discord
             {
 
                 var names = new List<string>();
+
+                var tasks = new List<Task>();
                 foreach (var user in channel.Users)
                 {
                     Console.WriteLine($"User name: {user.Id}");
-                    await user.ModifyAsync(p => p.Mute = toggle);
+                    tasks.Add(user.ModifyAsync(p => p.Mute = toggle));
                     names.Add(user.Username);
                 }
+
+                while (tasks.Any())
+                {
+                    Task finished = await Task.WhenAny(tasks);
+                    tasks.Remove(finished);
+                }
+
                 string message = $"I just {(toggle ? "muted" : "unmuted")} the following users on {channelName}:\n {string.Join(',', names)} ";
                 await LogToChannel(serverId, this.logChannel, message);
             }
+        }
+
+        public async Task FlushChannelLogs(ulong serverId)
+        {
+            SocketGuild guild = client.GetGuild(serverId);
+            Console.WriteLine();
+            Console.WriteLine("Task: Clear Logs");
+            Console.WriteLine($"Guild Name: {guild.Name}");
+            var channel = guild.GetTextChannel(this.logChannel);
+            var text = await channel.GetMessagesAsync(100).FlattenAsync();
+
+            await channel.DeleteMessagesAsync(text);
+
+            string message = $"I just deleted previous messages";
+            await LogToChannel(serverId, this.logChannel, message);
         }
 
         private async Task LogToChannel(ulong serverId, ulong channelId, string message)
@@ -85,16 +110,23 @@ namespace Sshhh.Web.Discord
             var from = guild.VoiceChannels.FirstOrDefault(p => p.Name.Equals(fromChannel));
             var to = guild.VoiceChannels.FirstOrDefault(p => p.Name.Equals(toChannel));
 
-            var names = new List<string>();
 
             if (from.Users.Any())
             {
 
+                var names = new List<string>();
+                var tasks = new List<Task>();
                 foreach (var user in from.Users)
                 {
-                    await user.ModifyAsync(x => x.Channel = to);
+                    tasks.Add(user.ModifyAsync(x => x.Channel = to));
                     names.Add(user.Username);
                 }
+                while (tasks.Any())
+                {
+                    Task finished = await Task.WhenAny(tasks);
+                    tasks.Remove(finished);
+                }
+
                 string message = $"I just moved the following users from {fromChannel} to {toChannel}:\n {string.Join(',', names)} ";
                 await LogToChannel(serverId, this.logChannel, message);
             }
