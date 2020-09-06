@@ -1,13 +1,13 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "EXD is the best!";
 }
 
 <div class="d-flex justify-content-center align-items-center min-vh-100">
-    <section class="text-center h-100">
-        <header class="m-2">
-            <h3 class="font-weight-bold">Channel Sshhh - EXD</h3>
+    <section class="text-center h-100 container">
+        <header class="m-2 mb-5">
+            <h3 class="font-weight-bold pb-2">Channel Sshhh - EXD</h3>
             <p>This is only for <strong>WOSHU GAMERS</strong><br /> Enter current channel(required for muting users), and afk channel</p>
         </header>
         <form method="post" asp-page="Index">
@@ -30,18 +30,37 @@
                 <input type="hidden" class="form-control" id="mute_hidden" asp-for="@Model.Input.Mute" value="True">
             </div>
             <div class="form-group">
-                <div class="d-flex">
-                    <button type="submit" asp-page-handler="Move" class="btn btn-lg btn-danger w-50 mb-2 mr-1">
-                        Move
-                    </button>
-                    <button type="submit" class="btn btn-danger mb-2  w-50 ml-1" asp-page-handler="MoveSwap">
+                <button type="submit" asp-page-handler="Move" class="btn-red btn btn-lg btn-danger m-2">
+                    <h3>
+                        <i class="fas fa-arrows-alt"></i>
+                    </h3>
+                    Move
+                </button>
+                <button type="submit" class="btn-red btn btn-lg btn-danger m-2" asp-page-handler="MoveSwap">
+                    <h3>
                         <i class="fas fa-exchange-alt"></i>
-                    </button>
-                </div>
-                <div class="d-flex">
-                    <button type="submit" asp-page-handler="MuteUsers" class="btn-toggle-mute btn btn-lg btn-danger w-50 mb-2 mr-1">Mute</button>
-                    <button type="submit" asp-page-handler="UnMuteUsers" class="btn-toggle-mute btn btn-lg btn-danger w-50 mb-2 ml-1">UnMute</button>
-                </div>
+                    </h3>
+                    Swap
+                </button>
+                <button type="submit" asp-page-handler="MuteUsers" class="btn-red btn btn-lg btn-danger m-2">
+                    <h3>
+                        <i class="fas fa-volume-mute"></i>
+                    </h3>
+                    Mute
+                </button>
+                <button type="submit" asp-page-handler="UnMuteUsers" class="btn-red btn btn-lg btn-danger m-2">
+                    <h3>
+                        <i class="fas fa-volume-up"></i>
+                    </h3>
+                    UnMute
+                </button>
+
+                <button type="submit" asp-page-handler="ClearLogs" class="btn-red btn btn-lg btn-danger m-2">
+                    <h3>
+                        <i class="fas fa-comment-slash"></i>
+                    </h3>
+                    Clear Logs
+                </button>
             </div>
         </form>
     </section>

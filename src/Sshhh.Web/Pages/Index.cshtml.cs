@@ -36,6 +36,20 @@ namespace Sshhh.Web.Pages
             }
         }
 
+        public async Task OnPostClearLogsAsync()
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await discordService.FlushChannelLogs(Input.ServerId);
+                }
+                catch (Exception e)
+                {
+                    this._logger.LogInformation(e, "Unable to Process");
+                }
+            }
+        }
         public async Task OnPostMuteUsersAsync()
         {
             if (ModelState.IsValid)
