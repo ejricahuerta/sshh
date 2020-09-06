@@ -60,7 +60,7 @@ namespace Sshhh.Web.Discord
                 {
                     Console.WriteLine($"User name: {user.Id}");
                     tasks.Add(user.ModifyAsync(p => p.Mute = toggle));
-                    names.Add(user.Username);
+                    names.Add(user.Mention);
                 }
 
                 while (tasks.Any())
@@ -69,7 +69,7 @@ namespace Sshhh.Web.Discord
                     tasks.Remove(finished);
                 }
 
-                string message = $"I just {(toggle ? "muted" : "unmuted")} the following users on {channelName}:\n {string.Join(',', names)} ";
+                string message = $"I just {(toggle ? "muted" : "unmuted")} the following users on {channelName}:\n {string.Join("\n", names)}\n I'm not spamming guys...blame EXD!";
                 await LogToChannel(serverId, this.logChannel, message);
             }
         }
@@ -85,7 +85,7 @@ namespace Sshhh.Web.Discord
 
             await channel.DeleteMessagesAsync(text);
 
-            string message = $"I just deleted previous messages";
+            string message = $"Okay okay okay! Relax, I just deleted previous messages. Don't hate me. blame EXD";
             await LogToChannel(serverId, this.logChannel, message);
         }
 
@@ -93,9 +93,8 @@ namespace Sshhh.Web.Discord
         {
             SocketGuild guild = client.GetGuild(serverId);
             Console.WriteLine();
-            Console.WriteLine("Task: Log");
+            Console.WriteLine("Task: Log to Channel");
             Console.WriteLine($"Guild Name: {guild.Name}");
-            Console.WriteLine($"Guild Channels: {guild.Channels.Count}");
             var log = guild.GetTextChannel(channelId);
             await log.SendMessageAsync(message);
         }
@@ -119,7 +118,7 @@ namespace Sshhh.Web.Discord
                 foreach (var user in from.Users)
                 {
                     tasks.Add(user.ModifyAsync(x => x.Channel = to));
-                    names.Add(user.Username);
+                    names.Add(user.Mention);
                 }
                 while (tasks.Any())
                 {
@@ -127,7 +126,7 @@ namespace Sshhh.Web.Discord
                     tasks.Remove(finished);
                 }
 
-                string message = $"I just moved the following users from {fromChannel} to {toChannel}:\n {string.Join(',', names)} ";
+                string message = $"I just moved the following users from {fromChannel} to {toChannel}:\n {string.Join("\n", names)} \n I'm not spamming....blame EXD!";
                 await LogToChannel(serverId, this.logChannel, message);
             }
         }
