@@ -59,8 +59,11 @@ namespace Sshhh.Web.Discord
                 foreach (var user in channel.Users)
                 {
                     Console.WriteLine($"User name: {user.Id}");
-                    tasks.Add(user.ModifyAsync(p => p.Mute = toggle));
-                    names.Add(user.Mention);
+                    if ((!user.IsMuted && toggle) || (user.IsMuted && !toggle))
+                    {
+                        tasks.Add(user.ModifyAsync(p => p.Mute = toggle));
+                        names.Add(user.Mention);
+                    }
                 }
 
                 while (tasks.Any())
@@ -69,8 +72,11 @@ namespace Sshhh.Web.Discord
                     tasks.Remove(finished);
                 }
 
-                string message = $"I just {(toggle ? "muted" : "unmuted")} the following users on {channelName}:\n {string.Join("\n", names)}\n I'm not spamming guys...blame EXD!";
-                await LogToChannel(serverId, this.logChannel, message);
+                if (names.Any())
+                {
+                    string message = $"I just {(toggle ? "muted" : "unmuted")} the following users on {channelName}:\n {string.Join("\n", names)}\n I'm not spamming guys...blame EXD!";
+                    await LogToChannel(serverId, this.logChannel, message);
+                }
             }
         }
 
@@ -83,10 +89,13 @@ namespace Sshhh.Web.Discord
             var channel = guild.GetTextChannel(this.logChannel);
             var text = await channel.GetMessagesAsync(100).FlattenAsync();
 
-            await channel.DeleteMessagesAsync(text);
+            if (text.Any())
+            {
+                await channel.DeleteMessagesAsync(text);
 
-            string message = $"Okay okay okay! Relax, I just deleted previous messages. Don't hate me. blame EXD";
-            await LogToChannel(serverId, this.logChannel, message);
+                string message = $"Okay okay okay! Relax, I just deleted previous messages. Don't hate me. blame EXD";
+                await LogToChannel(serverId, this.logChannel, message);
+            }
         }
 
         private async Task LogToChannel(ulong serverId, ulong channelId, string message)
@@ -126,8 +135,11 @@ namespace Sshhh.Web.Discord
                     tasks.Remove(finished);
                 }
 
-                string message = $"I just moved the following users from {fromChannel} to {toChannel}:\n {string.Join("\n", names)} \n I'm not spamming....blame EXD!";
-                await LogToChannel(serverId, this.logChannel, message);
+                if (names.Any())
+                {
+                    string message = $"I just moved the following users from {fromChannel} to {toChannel}:\n {string.Join("\n", names)} \n I'm not spamming....blame EXD!";
+                    await LogToChannel(serverId, this.logChannel, message);
+                }
             }
         }
 
