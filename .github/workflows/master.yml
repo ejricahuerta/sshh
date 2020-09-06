@@ -1,0 +1,38 @@
+name: CI
+
+on: 
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.201
+    - name: Dotnet Publish
+      run: dotnet publish src/Sshhh.Web -c Release -o deploy
+    - name: parent working directory
+      run: pwd
+    - name: Copy via ssh
+      uses: garygrossgarten/github-action-scp@v0.5.3
+      with:
+        local: /home/runner/work/sshh/sshh/deploy/
+        remote: ${{ secrets.PROD_DEPLOY_FOLDER }}
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
+    - name: Run SSH command
+      uses: garygrossgarten/github-action-ssh@v0.3.0
+      with:
+        command: |
+                 sudo systemctl stop sshhh-app.service
+                 sudo systemctl start sshhh-app.service
+                 sudo systemctl daemon-reload
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        password: ${{ secrets.SSH_PASSWORD }}
