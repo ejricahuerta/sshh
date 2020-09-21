@@ -4,3 +4,13 @@
 
 /src/Sshhh.Web/bin/Debug/netcoreapp3.1
 /src/Sshhh.Web/obj
+/src/.vs/Channel.Sshhh/DesignTimeBuild
+/src/Sshhh.API/bin/Debug/netcoreapp3.1
+/src/Sshhh.API/obj
+/src/Sshhh.Blazor/obj/Debug/netstandard2.1
+/src/Sshhh.Blazor/obj/project.assets.json
+/src/Sshhh.Blazor/obj
+/src/Sshhh.Discord/bin/Debug/netstandard2.0
+/src/Sshhh.Discord/obj
+/src/Sshhh.Blazor/bin/Debug/netstandard2.1
+/src/.vs/Channel.Sshhh/config

@@ -3,7 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sshhh.Web", "Sshhh.Web\Sshhh.Web.csproj", "{8EE9080E-6E28-4E19-961E-1FA9EDFCFA60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sshhh.Web", "Sshhh.Web\Sshhh.Web.csproj", "{8EE9080E-6E28-4E19-961E-1FA9EDFCFA60}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sshhh.API", "Sshhh.API\Sshhh.API.csproj", "{DEEE1234-7316-47D1-9908-1B12CDA8F3E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sshhh.Discord", "Sshhh.Discord\Sshhh.Discord.csproj", "{2F577C81-D690-4B6A-9D0C-1EF3CC2A29C9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sshhh.Blazor", "Sshhh.Blazor\Sshhh.Blazor.csproj", "{F21D940E-2C31-4E38-9F56-03F37BC4EDD5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "default inputs", "default inputs", "{1A460315-EB6A-4994-94C1-D46C7D8FABB4}"
+	ProjectSection(SolutionItems) = preProject
+		cred.json = cred.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +26,18 @@ Global
 		{8EE9080E-6E28-4E19-961E-1FA9EDFCFA60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EE9080E-6E28-4E19-961E-1FA9EDFCFA60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EE9080E-6E28-4E19-961E-1FA9EDFCFA60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEEE1234-7316-47D1-9908-1B12CDA8F3E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEEE1234-7316-47D1-9908-1B12CDA8F3E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEEE1234-7316-47D1-9908-1B12CDA8F3E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEEE1234-7316-47D1-9908-1B12CDA8F3E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F577C81-D690-4B6A-9D0C-1EF3CC2A29C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F577C81-D690-4B6A-9D0C-1EF3CC2A29C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F577C81-D690-4B6A-9D0C-1EF3CC2A29C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F577C81-D690-4B6A-9D0C-1EF3CC2A29C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F21D940E-2C31-4E38-9F56-03F37BC4EDD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F21D940E-2C31-4E38-9F56-03F37BC4EDD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F21D940E-2C31-4E38-9F56-03F37BC4EDD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F21D940E-2C31-4E38-9F56-03F37BC4EDD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,155 @@
+﻿@page "/discord"
+
+@using Microsoft.Extensions.Configuration
+@using Sshhh.Discord.Model
+@inject IConfiguration configuration
+@inject HttpClient httpclient
+
+
+<div class="container-fluid mt-5">
+    <section class="text-center h-100 container">
+        <header class="m-2 mb-5">
+            <h3 class="font-weight-bold pb-2">Sshhh Discord</h3>
+            <p>Enter current channel(required for muting users), and afk channel</p>
+        </header>
+        <div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <input type="text" class="form-control" placeholder="From Channel" @bind="Input.From">
+                </div>
+                <div class="form-group col-md-6">
+                    <input type="text" class="form-control" placeholder="To Channel" @bind="Input.To">
+                </div>
+
+            </div>
+            <div class="form-group">
+                <button @onclick="@(async e=> await MoveUser())" class="btn-red btn btn-lg btn-danger m-2">
+                    <h3>
+                        <i class="fas fa-arrows-alt"></i>
+                    </h3>
+                    Move
+                </button>
+                <button @onclick="@(async e=> await SwapUser())" class="btn-red btn btn-lg btn-danger m-2">
+                    <h3>
+                        <i class="fas fa-exchange-alt"></i>
+                    </h3>
+                    Swap
+                </button>
+                <button @onclick="@(async e => await ToggleMute(true))" class="btn-red btn btn-lg btn-danger m-2">
+                    <h3>
+                        <i class="fas fa-volume-mute"></i>
+                    </h3>
+                    Mute
+                </button>
+                <button @onclick="@(async e => await ToggleMute(false))" class="btn-red btn btn-lg btn-danger m-2">
+                    <h3>
+                        <i class="fas fa-volume-up"></i>
+                    </h3>
+                    UnMute
+                </button>
+
+                <button @onclick="@(async e=> await ClearLogs())" class="btn-red btn btn-lg btn-danger m-2">
+                    <h3>
+                        <i class="fas fa-comment-slash"></i>
+                    </h3>
+                    Clear Logs
+                </button>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<div class="m-2 fixed-bottom">
+    <div class="alert alert-warning fade @(hasErrors? "show":"")" role="alert">
+        @errorMessage
+        @if (errorMessage != null && errorMessage.Contains("Configurations"))
+        {
+            <a href="configuration">configure now</a>
+        }
+    </div>
+</div>
+
+
+
+@code {
+
+    private string APIURL;
+
+    private bool hasErrors = false;
+    private string errorMessage;
+
+    private DiscordInput Input { get; set; } = new DiscordInput();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        APIURL = $"{(configuration.GetSection("SshhhAPI").Value)}/sshhh";
+
+        var response = await httpclient.GetAsync(APIURL);
+        if (!response.IsSuccessStatusCode)
+        {
+
+            hasErrors = true;
+            errorMessage = "Configuration Error! Please update the settings.";
+        }
+
+    }
+
+    private async Task ToggleMute(bool mute = true)
+    {
+
+        var muteURL = $"{APIURL}/muteusers";
+        Input.Mute = mute;
+
+        var response = await httpclient.PostAsJsonAsync(muteURL, Input);
+        if (!response.IsSuccessStatusCode)
+        {
+
+            hasErrors = true;
+
+            errorMessage = $"Unable to {(mute ? "mute" : "unmute")} users. Please make sure that the channels are valid. If persist, please update the settings.";
+        }
+
+    }
+
+    private async Task MoveUser()
+    {
+        var moveURL = $"{APIURL}/moveusers";
+
+        var response = await httpclient.PostAsJsonAsync(moveURL, Input);
+        if (!response.IsSuccessStatusCode)
+        {
+
+            hasErrors = true;
+            errorMessage = $"Unable to move users. Please make sure that the channels are valid. If persist, please update the settings.";
+        }
+    }
+
+    private async Task SwapUser()
+    {
+        var swapURL = $"{APIURL}/swapusers";
+
+        var response = await httpclient.PostAsJsonAsync(swapURL, Input);
+        if (!response.IsSuccessStatusCode)
+        {
+
+            hasErrors = true;
+            errorMessage = $"Unable to move users. Please make sure that the channels are valid. If persist, please update the settings.";
+        }
+    }
+
+    private async Task ClearLogs()
+    {
+        var clearlogsURL = $"{APIURL}/clearlogs";
+
+        var response = await httpclient.PostAsJsonAsync(clearlogsURL, Input);
+        if (!response.IsSuccessStatusCode)
+        {
+
+            hasErrors = true;
+            errorMessage = $"Unable to move users. Make sure channels are valid";
+        }
+    }
+
+}
