@@ -1,4 +1,4 @@
-# Discord - Sshh
+# Discord - Sshhh
 Mute your loud friends while playing Among Us
 
 
